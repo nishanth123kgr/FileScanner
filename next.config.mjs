@@ -10,9 +10,10 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
-  // For GitHub Pages compatibility
-  basePath: process.env.NODE_ENV === 'production' ? '/scan' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/scan/' : '',
+  // If you're not deploying to a /scan subdirectory, remove these basePath and assetPrefix settings
+  // or set them to empty strings
+  basePath: '',
+  assetPrefix: '',
 }
 
 export default nextConfig
