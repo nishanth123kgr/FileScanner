@@ -7,7 +7,7 @@ import FileUploader from "@/components/file-scanning/file-uploader"
 import ScanResults from "@/components/file-scanning/scan-results"
 import PEAnalysis from "@/components/file-scanning/pe-analysis"
 import YaraResults from "@/components/file-scanning/yara-results"
-import HexViewer from "@/components/file-scanning/hex-viewer"
+import HexViewer from "@/components/file-scanning/hex-viewer/index"
 import { analyzePEFile, type PEAnalysisResult } from "@/components/file-scanning/pe-analysis/utils/pe-parser"
 
 // Define a file size threshold for optimization strategies

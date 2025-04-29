@@ -3,6 +3,8 @@
  */
 import md5 from 'js-md5';
 import { bufferToHex, readFileAsBuffer } from './buffer-utils';
+import { sha1 } from 'js-sha1';
+import { sha256 } from 'js-sha256';
 
 /**
  * Interface for file hash results
@@ -12,6 +14,14 @@ export interface FileHashes {
   sha1: string;
   sha256: string;
 }
+
+/**
+ * Check if Web Crypto API is available
+ */
+const isWebCryptoAvailable = typeof window !== 'undefined' && 
+  window.crypto && 
+  window.crypto.subtle && 
+  typeof window.crypto.subtle.digest === 'function';
 
 /**
  * Computes MD5 hash for a buffer using the js-md5 library
@@ -26,16 +36,38 @@ export const computeMd5Hash = (buffer: Uint8Array): string => {
  * Computes SHA-1 hash for a buffer
  */
 export const computeSha1Hash = async (buffer: Uint8Array): Promise<string> => {
-  const hashBuffer = await crypto.subtle.digest('SHA-1', buffer);
-  return bufferToHex(hashBuffer);
+  // Use Web Crypto API if available, otherwise fall back to js-sha256
+  if (isWebCryptoAvailable) {
+    try {
+      const hashBuffer = await window.crypto.subtle.digest('SHA-1', buffer);
+      return bufferToHex(hashBuffer);
+    } catch (error) {
+      console.warn('Web Crypto API failed for SHA-1, using fallback', error);
+      // Fall through to use the fallback
+    }
+  }
+  
+  // Fallback to js-sha256 implementation
+  return sha1(buffer);
 };
 
 /**
  * Computes SHA-256 hash for a buffer
  */
 export const computeSha256Hash = async (buffer: Uint8Array): Promise<string> => {
-  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-  return bufferToHex(hashBuffer);
+  // Use Web Crypto API if available, otherwise fall back to js-sha256
+  if (isWebCryptoAvailable) {
+    try {
+      const hashBuffer = await window.crypto.subtle.digest('SHA-256', buffer);
+      return bufferToHex(hashBuffer);
+    } catch (error) {
+      console.warn('Web Crypto API failed for SHA-256, using fallback', error);
+      // Fall through to use the fallback
+    }
+  }
+  
+  // Fallback to js-sha256 implementation
+  return sha256(buffer);
 };
 
 /**
