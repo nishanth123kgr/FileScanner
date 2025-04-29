@@ -37,11 +37,15 @@ export function SectionsAnalysis({ sections }: SectionsAnalysisProps) {
                 <div className="grid grid-cols-2 gap-2 mb-2 text-xs">
                   <div>
                     <span className="text-zinc-500">Virtual Size:</span>{" "}
-                    <span className="text-zinc-300">{section.virtual_size.toLocaleString()} bytes</span>
+                    <span className="text-zinc-300">
+                      {typeof section.virtual_size === 'number' ? section.virtual_size.toLocaleString() : 'Unknown'} bytes
+                    </span>
                   </div>
                   <div>
                     <span className="text-zinc-500">Raw Size:</span>{" "}
-                    <span className="text-zinc-300">{section.raw_size.toLocaleString()} bytes</span>
+                    <span className="text-zinc-300">
+                      {typeof section.raw_size === 'number' ? section.raw_size.toLocaleString() : 'Unknown'} bytes
+                    </span>
                   </div>
                 </div>
                 

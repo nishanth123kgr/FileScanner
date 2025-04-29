@@ -1,65 +1,53 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ThreatSummary } from "./components/ThreatSummary"
-import { DetectedIssues } from "./components/DetectedIssues"
-import { FileAnalysisReport } from "./components/FileAnalysisReport" 
-import { Recommendations } from "./components/Recommendations"
-import { AdditionalActions } from "./components/AdditionalActions"
-import { computeFileHashes, getMagicInfo, FileData, FileHashes } from "@/components/file-scanning/scan-results/utils/file-utils"
+import React, { useState, useEffect } from "react";
+import CombinedAnalysis from "../combined-analysis";
+import { YaraMatch } from "../yara-scanning/types";
+import { PEAnalysisResult } from "../pe-analysis/utils/pe-parser";
+import { scanFileWithYara } from "../yara-scanning/utils/yara-scanner";
+import { computeFileHashes, FileData, FileHashes } from "./utils/file-utils";
 
 interface ScanResultsProps {
-  file: File | null
-  fileData: FileData
+  file: File | null;
+  fileData?: FileData;
+  peData?: PEAnalysisResult | null;
 }
 
-export default function ScanResults({ fileData, file }: ScanResultsProps) {
-  // State for file hashes
-  const [fileHashes, setFileHashes] = useState<FileHashes | null>(null)
-  
-  // State for file magic information
-  const [magicInfo, setMagicInfo] = useState<string | null>(null)
+export default function ScanResults({ file, fileData, peData }: ScanResultsProps) {
+  const [yaraMatches, setYaraMatches] = useState<YaraMatch[]>([]);
+  const [isYaraLoading, setIsYaraLoading] = useState<boolean>(false);
+  const [yaraError, setYaraError] = useState<string | null>(null);
+  const [fileHashes, setFileHashes] = useState<FileHashes | null>(null);
 
   // Effect to compute hashes when file changes
   useEffect(() => {
     const getHashes = async () => {
-      const hashes = await computeFileHashes(file)
-      setFileHashes(hashes)
-    }
+      if (file) {
+        const hashes = await computeFileHashes(file);
+        setFileHashes(hashes);
+      }
+    };
     
-    getHashes()
-  }, [file])
+    getHashes();
+  }, [file]);
 
-  // Effect to get magic info when file changes
-  useEffect(() => {
-    const getFileInfo = async () => {
-      const magic = await getMagicInfo(file)
-      setMagicInfo(magic)
-    }
-    
-    getFileInfo()
-  }, [file])
+  // For YARA scanning functionality - can be implemented later if needed
+  const isPELoading = false;
+  const peError = null;
+
+
 
   return (
     <div className="space-y-8">
-      {/* Threat Summary Card */}
-      <ThreatSummary fileName={fileData.fileName} />
-
-      {/* Detected Issues */}
-      <DetectedIssues />
-
-      {/* File Analysis Report */}
-      <FileAnalysisReport 
-        fileData={fileData}
-        fileHashes={fileHashes}
-        magicInfo={magicInfo}
+      <CombinedAnalysis
+        file={file}
+        peData={peData || null}
+        yaraMatches={yaraMatches}
+        isPELoading={isPELoading}
+        isYaraLoading={isYaraLoading}
+        peError={peError}
+        yaraError={yaraError}
       />
-
-      {/* Recommendations */}
-      <Recommendations />
-
-      {/* Additional Actions */}
-      <AdditionalActions />
     </div>
-  )
+  );
 }
