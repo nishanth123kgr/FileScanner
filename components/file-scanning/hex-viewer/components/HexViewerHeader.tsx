@@ -48,10 +48,10 @@ export const HexViewerHeader = ({ file, fileSize, onSearch }: HexViewerHeaderPro
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <Input
-                placeholder="Search hex pattern (e.g., 4D 5A 90)"
-                className="bg-zinc-800/50 border-zinc-700/50 text-white hover:border-zinc-600 focus:border-purple-500/50 transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search hex pattern (e.g., 4D 5A 90)"
+              className="bg-zinc-800/50 border-zinc-700/50 text-white hover:border-zinc-600 focus-visible:ring-purple-500/50 focus-visible:border-purple-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 focus-visible:ring-2 transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <Button onClick={handleSearch} className="bg-purple-600 hover:bg-purple-500 text-white border-0">

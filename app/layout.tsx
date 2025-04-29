@@ -8,9 +8,8 @@ import BackgroundEffects from "@/components/background-effects"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "CyberTools - Security Utilities",
-  description: "Cybersecurity utilities and tools",
-  generator: "v0.dev",
+  title: "Static File Analysis",
+  description: "Deep analysis of files for malware, vulnerabilities, and security threats",
 }
 
 export default function RootLayout({
