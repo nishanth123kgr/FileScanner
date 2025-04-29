@@ -108,10 +108,10 @@ export default function FileUploader({
         >
           <Card className="card-glassmorphism p-6 red-accent-border overflow-hidden relative">
             {/* Animated background effect */}
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-purple-500/5"></div>
+            {/* <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-purple-500/5"></div>
             <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-red-500/10 blur-3xl"></div>
             <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-purple-500/10 blur-3xl"></div>
-            
+             */}
             {!fileSelected ? (
               <div
                 className={`relative flex flex-col items-center justify-center py-10 md:py-16 border-2 border-dashed rounded-lg backdrop-blur-sm transition-all duration-300 ${
@@ -267,7 +267,7 @@ export default function FileUploader({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.3 }}
-          className="card-glassmorphism p-5 red-accent-border relative overflow-hidden group"
+          className="card-glassmorphism p-5 red-accent-border relative overflow-hidden group rounded-lg"
         >
           <div className="absolute -inset-1 bg-gradient-to-r from-red-500/5 via-red-500/0 to-red-500/5 group-hover:from-red-500/10 opacity-50 group-hover:opacity-100 transition-opacity rounded-lg"></div>
           <h4 className="text-white font-medium mb-2 flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function FileUploader({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.4 }}
-          className="card-glassmorphism p-5 red-accent-border relative overflow-hidden group"
+          className="card-glassmorphism p-5 red-accent-border relative overflow-hidden group rounded-lg"
         >
           <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/5 via-purple-500/0 to-purple-500/5 group-hover:from-purple-500/10 opacity-50 group-hover:opacity-100 transition-opacity rounded-lg"></div>
           <h4 className="text-white font-medium mb-2 flex items-center gap-2">
@@ -305,7 +305,7 @@ export default function FileUploader({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.5 }}
-          className="card-glassmorphism p-5 red-accent-border relative overflow-hidden group"
+          className="card-glassmorphism p-5 red-accent-border relative overflow-hidden group rounded-lg"
         >
           <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/5 via-orange-500/0 to-orange-500/5 group-hover:from-orange-500/10 opacity-50 group-hover:opacity-100 transition-opacity rounded-lg"></div>
           <h4 className="text-white font-medium mb-2 flex items-center gap-2">

@@ -253,8 +253,8 @@ export default function HexViewer({ file }: { file: File | null }) {
 
   // Only render component content if tab is visible or we're in the initial render
   return (
-    <div className="space-y-6">
-      <motion.div 
+    <div className="space-y-6 w-full max-w-full">
+      <motion.div
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5 }}

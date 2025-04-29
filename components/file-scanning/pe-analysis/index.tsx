@@ -37,7 +37,7 @@ export default function PEAnalysis({ fileName, peData, isLoading, error }: PEAna
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-full">
       {isLoading && (
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
@@ -81,7 +81,7 @@ export default function PEAnalysis({ fileName, peData, isLoading, error }: PEAna
       )}
       
       {peData && !isLoading && (
-        <div className="space-y-8">
+        <div className="space-y-8 w-full">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 

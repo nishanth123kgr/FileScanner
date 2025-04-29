@@ -20,9 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} antialiased flex justify-center`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
-          <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
+          <div className="min-h-screen max-w-screen-xl bg-zinc-950 relative overflow-hidden">
             <div className="flex">
               <main className="flex-1 p-4 md:p-8 relative z-10">{children}</main>
             </div>
