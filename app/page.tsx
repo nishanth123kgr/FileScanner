@@ -1,5 +1,6 @@
 "use client"
 
+import BackgroundEffects from "@/components/background-effects";
 import { useFileScanning, FileTabNavigation, FileContent } from "./file-scanning"
 
 export default function Home() {
@@ -26,7 +27,6 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-white">Static File Analysis</h1>
         <p className="text-zinc-400">Deep analysis of files for malware, vulnerabilities, and security threats</p>
       </div>
-
       {fileSelected && (
         <>
           <FileTabNavigation 
