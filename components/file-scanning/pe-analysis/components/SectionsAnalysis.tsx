@@ -165,9 +165,9 @@ export function SectionsAnalysis({ sections }: SectionsAnalysisProps) {
     <div>
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-blue-400">Section Entropy Analysis</h4>
-        <Badge variant="outline" className="bg-zinc-900/50 text-xs">
-          {sections.length} sections
-        </Badge>
+        <div className="inline-flex items-center rounded-full font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 px-2 py-0.5 text-xs">
+          {sections?.length || 0} sections
+        </div>
       </div>
       
       {sections.length > 0 ? (

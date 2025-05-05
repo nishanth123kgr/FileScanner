@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import type { ImportedDll } from '../utils/pe-parser';
 
@@ -9,6 +9,17 @@ export interface ImportsAnalysisProps {
 export function ImportsAnalysis({ imports }: ImportsAnalysisProps) {
   // Check if we're using the new data format
   const isNewFormat = imports?.length > 0 && 'functionCount' in imports[0];
+  
+  // State to track which DLLs have their functions expanded
+  const [expandedDlls, setExpandedDlls] = useState<Record<number, boolean>>({});
+  
+  // Toggle function expansion for a specific DLL by index
+  const toggleFunctions = (index: number) => {
+    setExpandedDlls(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
 
   return (
     <div className="space-y-4">
@@ -31,26 +42,36 @@ export function ImportsAnalysis({ imports }: ImportsAnalysisProps) {
                 {/* For new format, use functions directly if available */}
                 {isNewFormat && dll.functions?.length > 0 ? (
                   <div className="space-y-1">
-                    {dll.functions.slice(0, 5).map((func: string, funcIndex: number) => (
+                    {dll.functions.slice(0, expandedDlls[index] ? dll.functions.length : 5).map((func: string, funcIndex: number) => (
                       <div key={funcIndex} className="text-xs text-zinc-400 font-mono">{func}</div>
                     ))}
                     {dll.functions.length > 5 && (
-                      <div className="text-xs text-zinc-500 mt-1">
-                        + {dll.functions.length - 5} more functions
-                      </div>
+                      <button 
+                        onClick={() => toggleFunctions(index)}
+                        className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
+                      >
+                        {expandedDlls[index] 
+                          ? '▲ Show less' 
+                          : `▼ Show all ${dll.functions.length} functions`}
+                      </button>
                     )}
                   </div>
                 ) : (
                   /* For old format */
                   dll.functions?.length > 0 ? (
                     <div className="space-y-1">
-                      {dll.functions.slice(0, 5).map((func: string, funcIndex: number) => (
+                      {dll.functions.slice(0, expandedDlls[index] ? dll.functions.length : 5).map((func: string, funcIndex: number) => (
                         <div key={funcIndex} className="text-xs text-zinc-400 font-mono">{func}</div>
                       ))}
                       {dll.functions.length > 5 && (
-                        <div className="text-xs text-zinc-500 mt-1">
-                          + {dll.functions.length - 5} more functions
-                        </div>
+                        <button 
+                          onClick={() => toggleFunctions(index)}
+                          className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
+                        >
+                          {expandedDlls[index] 
+                            ? '▲ Show less' 
+                            : `▼ Show all ${dll.functions.length} functions`}
+                        </button>
                       )}
                     </div>
                   ) : (

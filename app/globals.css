@@ -57,7 +57,7 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(63, 63, 70, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  /* box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); */
 }
 
 .card-glassmorphism {
@@ -65,7 +65,7 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(63, 63, 70, 0.3);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
 }
@@ -99,5 +99,34 @@ body {
   div.max-w-screen-xl {
     width: 100%;
   }
+}
 
+@layer utilities {
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
 }

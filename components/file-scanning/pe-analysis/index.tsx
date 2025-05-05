@@ -114,7 +114,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
             </Card>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -123,7 +123,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
               <h3 className="text-xl font-bold text-white mb-6 flex items-center">
                 <FileSearch className="h-5 w-5 text-blue-500 mr-2" />
                 PE File Analysis
-              </h3>
+              </h3> */}
 
               <div className="space-y-6">
                 {/* PE Headers Section */}
@@ -243,8 +243,8 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
                   )}
                 </div>
               </div>
-            </Card>
-          </motion.div>
+            {/* </Card>
+          </motion.div> */}
         </div>
       )}
     </div>

@@ -232,11 +232,6 @@ export default function CombinedAnalysis({
                     <Card className="card-glassmorphism p-6 border-0 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl relative overflow-hidden">
                         <div className="absolute -top-24 -right-24 w-32 h-32 rounded-full bg-indigo-500/5 blur-2xl"></div>
 
-                        <h3 className="text-xl font-medium text-indigo-500 mb-6 flex items-center">
-                            <FileSearch className="h-6 w-6 mr-2" />
-                            PE Structure Analysis
-                        </h3>
-
                         <PEAnalysis
                             fileName={file ? file.name : ""}
                             peData={peData}

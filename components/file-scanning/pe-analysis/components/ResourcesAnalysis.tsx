@@ -76,10 +76,10 @@ export function ResourcesAnalysis({ resources }: ResourcesAnalysisProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-medium text-blue-400">PE Resources ({resources.length})</h4>
-        <Badge variant="outline" className="bg-zinc-900/50 text-xs">
-          {Object.keys(resourcesByType).length} types
-        </Badge>
+        <h4 className="text-sm font-medium text-blue-400">PE Resources</h4>
+        <div className="inline-flex items-center rounded-full font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 px-2 py-0.5 text-xs">
+          {resources?.length || 0} resources
+        </div>
       </div>
       
       {resources.length > 0 ? (
