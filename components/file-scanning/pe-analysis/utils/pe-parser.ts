@@ -26,6 +26,18 @@ export interface ImportedDll {
 }
 
 /**
+ * Represents a resource entry
+ */
+export interface ResourceEntry {
+  size: number;
+  type: string;
+  language: string;
+  entropy: number;
+  chiSquared: number;
+  sha256: string;
+}
+
+/**
  * Represents DOS Header information
  */
 interface DOSHeader {
@@ -99,7 +111,7 @@ interface NTOptionalHeader {
 /**
  * Represents a Data Directory entry
  */
-interface DataDirectory {
+export interface DataDirectory {
   name: string;
   virtualAddress: number;
   size: number;
@@ -114,12 +126,47 @@ export interface PEAnalysisResult {
   timestamp?: string;
   sections: PESection[];
   imports?: ImportedDll[];
+  resources?: ResourceEntry[];
+  signature?: any;
   dosHeader?: DOSHeader;
   ntFileHeader?: NTFileHeader;
   ntOptionalHeader?: NTOptionalHeader;
   dataDirectories?: DataDirectory[];
   error?: string;
   stack?: string;
+  // For storing the original format data
+  originalNewFormat?: any;
+  // New format fields
+  header?: {
+    format?: string;
+    machine?: {
+      type?: string;
+      code?: string;
+    };
+    entryPoint?: string;
+    sectionCount?: number;
+    dosHeader?: DOSHeader;
+    fileHeader?: {
+      timestamp?: number;
+      optionalHeaderSize?: number;
+      characteristics?: {
+        value?: string;
+        flags?: string[];
+      };
+    };
+    optionalHeader?: {
+      magic?: string;
+      entryPoint?: string;
+      imageBase?: number;
+      sectionAlignment?: number;
+      fileAlignment?: number;
+      subsystem?: {
+        value?: number;
+        name?: string;
+      };
+      dataDirectories?: DataDirectory[];
+    };
+  };
 }
 
 // Size threshold to apply optimization strategies
@@ -565,6 +612,255 @@ export async function analyzePEFile(arrayBuffer: ArrayBuffer, isLargeFile: boole
       stack: err.stack
     };
   }
+}
+
+/**
+ * Adapts the new PE data format to match the component's expected format
+ * @param peData - PE data in the new format
+ * @returns PEAnalysisResult in the format expected by the component
+ */
+export function adaptNewPEFormat(peData: any): PEAnalysisResult {
+  console.log('adaptNewPEFormat received data:', JSON.stringify(peData, null, 2).substring(0, 500) + '...');
+  
+  // Return the original data if it's not in the expected format
+  if (!peData) {
+    console.warn('Received PE data is null or undefined');
+    return {
+      file_size: 0,
+      sections: [],
+      error: "No PE data available"
+    } as PEAnalysisResult;
+  }
+
+  console.log('Adapting new PE format to legacy format');
+
+  // Helper function to parse hex strings to numbers
+  const parseHex = (hexStr: string | undefined | null): number => {
+    if (!hexStr) return 0;
+    try {
+      // Remove '0x' prefix if present and convert to number
+      const cleanHex = hexStr.toString().replace(/^0x/i, '');
+      return parseInt(cleanHex, 16);
+    } catch (e) {
+      console.error('Failed to parse hex value:', hexStr, e);
+      return 0;
+    }
+  };
+
+  // Extract sections (if available)
+  const sections: PESection[] = [];
+  
+  if (peData.sections && Array.isArray(peData.sections)) {
+    console.log(`Processing ${peData.sections.length} sections`);
+    
+    for (const section of peData.sections) {
+      // Try to extract section data with careful error handling
+      try {
+        // Get virtual address - try various possible formats
+        let virtualAddress = '0x0';
+        if (typeof section.virtualAddress === 'object' && section.virtualAddress?.hex) {
+          virtualAddress = section.virtualAddress.hex;
+        } else if (section.virtual_address) {
+          virtualAddress = section.virtual_address;
+        } else if (typeof section.virtualAddress === 'string') {
+          virtualAddress = section.virtualAddress.startsWith('0x') ? 
+            section.virtualAddress : `0x${section.virtualAddress}`;
+        } else if (typeof section.virtualAddress === 'number') {
+          virtualAddress = `0x${section.virtualAddress.toString(16).padStart(8, '0')}`;
+        }
+        
+        // Get virtual size - try various possible formats
+        let virtualSize = 0;
+        if (typeof section.virtualSize === 'object' && section.virtualSize?.decimal) {
+          virtualSize = section.virtualSize.decimal;
+        } else if (typeof section.virtual_size === 'number') {
+          virtualSize = section.virtual_size;
+        } else if (section.virtual_size) {
+          virtualSize = parseHex(section.virtual_size);
+        } else if (typeof section.virtualSize === 'number') {
+          virtualSize = section.virtualSize;
+        } else if (section.virtualSize) {
+          virtualSize = parseHex(section.virtualSize);
+        }
+        
+        // Get raw size - try various possible formats
+        let rawSize = 0;
+        if (typeof section.rawSize === 'object' && section.rawSize?.decimal) {
+          rawSize = section.rawSize.decimal;
+        } else if (typeof section.raw_size === 'number') {
+          rawSize = section.raw_size;
+        } else if (section.raw_size) {
+          rawSize = parseHex(section.raw_size);
+        } else if (typeof section.rawSize === 'number') {
+          rawSize = section.rawSize;
+        } else if (section.rawSize) {
+          rawSize = parseHex(section.rawSize);
+        } else if (section.sizeOfRawData) {
+          rawSize = parseHex(section.sizeOfRawData);
+        }
+        
+        const sectionObj: PESection = {
+          name: section.name || 'Unknown',
+          virtual_address: virtualAddress,
+          virtual_size: virtualSize,
+          raw_size: rawSize,
+          entropy: (section.entropy?.toString() || '0'),
+          chi_square: (section.chiSquared?.toString() || section.chi_square || '0'),
+          characteristics: typeof section.characteristics === 'number' ? 
+            section.characteristics : 0
+        };
+        
+        sections.push(sectionObj);
+      } catch (error) {
+        console.error('Error processing section:', error);
+        // Add a placeholder section to maintain the count
+        sections.push({
+          name: 'Error processing section',
+          virtual_address: '0x0',
+          virtual_size: 0,
+          raw_size: 0,
+          entropy: '0',
+          chi_square: '0',
+          characteristics: 0
+        });
+      }
+    }
+  } else {
+    console.warn('No sections found in PE data or sections is not an array');
+  }
+
+  // Extract imports (if available)
+  const imports: ImportedDll[] = peData.imports?.map((imp: any) => ({
+    dll: imp.dll || 'Unknown DLL',
+    functions: Array.isArray(imp.functions) ? imp.functions : []
+  })) || [];
+
+  // Extract resources (if available)
+  const resources: ResourceEntry[] = peData.resources?.map((res: any) => ({
+    size: res.size || 0,
+    type: res.type || 'Unknown',
+    language: res.language || 'Unknown',
+    entropy: res.entropy || 0,
+    chiSquared: res.chiSquared || 0,
+    sha256: res.sha256 || ''
+  })) || [];
+
+  // Create DOS Header from the new format
+  const dosHeader: DOSHeader = {
+    e_magic: peData.header.dosHeader?.e_magic || '0x0000',
+    e_lfanew: parseHex(peData.header.dosHeader?.e_lfanew),
+    // Default values for other DOS header fields
+    e_cblp: 0,
+    e_cp: 0,
+    e_crlc: 0,
+    e_cparhdr: 0,
+    e_minalloc: 0,
+    e_maxalloc: 0,
+    e_ss: 0,
+    e_sp: 0,
+    e_csum: 0,
+    e_ip: 0,
+    e_cs: 0,
+    e_lfarlc: 0,
+    e_ovno: 0
+  };
+
+  // Create NT File Header from the new format
+  const ntFileHeader: NTFileHeader = {
+    machine: `${peData.header.machine?.type || 'Unknown'} (${peData.header.machine?.code || '0x0'})`,
+    numberOfSections: peData.header.sectionCount || 0,
+    timeDateStamp: peData.header.fileHeader?.timestamp ? 
+      new Date(peData.header.fileHeader.timestamp * 1000).toISOString() : 
+      'Unknown',
+    sizeOfOptionalHeader: peData.header.fileHeader?.optionalHeaderSize || 0,
+    characteristics: typeof peData.header.fileHeader?.characteristics?.value === 'string' ? 
+      parseHex(peData.header.fileHeader?.characteristics?.value) : 
+      (typeof peData.header.fileHeader?.characteristics?.value === 'number' ? 
+        peData.header.fileHeader?.characteristics?.value : 0),
+    characteristicsDescription: Array.isArray(peData.header.fileHeader?.characteristics?.flags) ? 
+      peData.header.fileHeader?.characteristics?.flags : [],
+    pointerToSymbolTable: 0,
+    numberOfSymbols: 0
+  };
+
+  // Create NT Optional Header from the new format
+  const ntOptionalHeader: NTOptionalHeader = {
+    magic: peData.header.optionalHeader?.magic || '0x0000',
+    addressOfEntryPoint: parseHex(peData.header.optionalHeader?.entryPoint || peData.header.entryPoint),
+    imageBase: parseHex(peData.header.optionalHeader?.imageBase?.toString() || '0'),
+    sectionAlignment: peData.header.optionalHeader?.sectionAlignment || 0,
+    fileAlignment: peData.header.optionalHeader?.fileAlignment || 0,
+    subsystem: peData.header.optionalHeader?.subsystem?.name || 'Unknown',
+    // Default values for other optional header fields
+    majorLinkerVersion: 0,
+    minorLinkerVersion: 0,
+    sizeOfCode: 0,
+    sizeOfInitializedData: 0,
+    sizeOfUninitializedData: 0,
+    baseOfCode: 0,
+    baseOfData: 0,
+    majorOperatingSystemVersion: 0,
+    minorOperatingSystemVersion: 0,
+    majorImageVersion: 0,
+    minorImageVersion: 0,
+    majorSubsystemVersion: 0,
+    minorSubsystemVersion: 0,
+    win32VersionValue: 0,
+    sizeOfImage: 0,
+    sizeOfHeaders: 0,
+    checkSum: 0,
+    dllCharacteristics: 0,
+    sizeOfStackReserve: 0,
+    sizeOfStackCommit: 0,
+    sizeOfHeapReserve: 0,
+    sizeOfHeapCommit: 0,
+    loaderFlags: 0,
+    numberOfRvaAndSizes: 0
+  };
+
+  // Extract Data Directories
+  const dataDirectories: DataDirectory[] = Array.isArray(peData.header.optionalHeader?.dataDirectories) ? 
+    peData.header.optionalHeader.dataDirectories.map((dir: any) => ({
+      name: dir.name || 'Unknown',
+      virtualAddress: parseHex(dir.virtualAddress),
+      size: dir.size || 0
+    })) : [];
+
+  // Calculate file size from sections if not available directly
+  const fileSize = peData.file_size || 
+    sections.reduce((total: number, section: PESection) => total + (section.raw_size || 0), 0) ||
+    1024; // Default size if we can't determine anything
+
+  // Create the result object with all necessary properties
+  const result: PEAnalysisResult = {
+    file_size: fileSize,
+    machine_type: peData.header.machine?.type || 'Unknown',
+    timestamp: ntFileHeader.timeDateStamp,
+    sections,
+    imports,
+    resources,
+    dosHeader,
+    ntFileHeader,
+    ntOptionalHeader,
+    dataDirectories,
+    // For components that check header presence, set both ways to access original format
+    header: peData.header, // Keep original header for compatibility
+    originalNewFormat: peData // Also store full original data
+  };
+  
+  console.log('Adapted data (summary):', {
+    dosHeader: result.dosHeader,
+    ntFileHeader: result.ntFileHeader,
+    ntOptionalHeader: result.ntOptionalHeader ? {
+      magic: result.ntOptionalHeader.magic,
+      addressOfEntryPoint: result.ntOptionalHeader.addressOfEntryPoint,
+      imageBase: result.ntOptionalHeader.imageBase,
+      subsystem: result.ntOptionalHeader.subsystem
+    } : 'Not available',
+    dataDirectories: result.dataDirectories?.length || 0
+  });
+
+  return result;
 }
 
 /**

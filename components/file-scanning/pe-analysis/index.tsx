@@ -2,14 +2,16 @@
 
 import React from "react"
 import { Card } from "@/components/ui/card"
-import { FileSearch, ChevronDown, ChevronUp, AlertTriangle } from "lucide-react"
+import { FileSearch, ChevronDown, ChevronUp, AlertTriangle, FileCode } from "lucide-react"
 import { motion } from "framer-motion"
 import { AnalysisHeader } from "./components/AnalysisHeader"
 import PEHeaders from "./components/PEHeaders"
 import { SectionsAnalysis } from "./components/SectionsAnalysis"
 import { ImportsAnalysis } from "./components/ImportsAnalysis"
 import { SuspiciousIndicators } from "./components/SuspiciousIndicators"
+import { ResourcesAnalysis } from "./components/ResourcesAnalysis"
 import type { PEAnalysisResult } from "./utils/pe-parser"
+import { adaptNewPEFormat } from "./utils/pe-parser"
 
 interface PEAnalysisProps {
   fileName: string,
@@ -18,14 +20,30 @@ interface PEAnalysisProps {
   error: string | null
 }
 
-type SectionKey = 'headers' | 'sections' | 'imports' | 'indicators';
+type SectionKey = 'headers' | 'sections' | 'imports' | 'resources' | 'indicators';
 
-export default function PEAnalysis({ fileName, peData, isLoading, error }: PEAnalysisProps) {
+export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, error }: PEAnalysisProps) {
+
+  // Convert the PE data to the format expected by our components if it doesn't match
+  const peData = React.useMemo(() => {
+    if (!rawPeData) return null;
+    
+    // If this is the new format (with header property), convert it
+    // This check is more direct - if there's a header property, it's the new format
+    if (rawPeData.header) {
+      console.log("Converting new PE format to component format...");
+      return adaptNewPEFormat(rawPeData);
+    }
+    
+    // Otherwise it's already in the right format
+    return rawPeData;
+  }, [rawPeData]);
 
   const [expandedSections, setExpandedSections] = React.useState({
     headers: true,
     sections: true,
     imports: true,
+    resources: true,
     indicators: true
   })
 
@@ -176,6 +194,31 @@ export default function PEAnalysis({ fileName, peData, isLoading, error }: PEAna
                     </div>
                   )}
                 </div>
+
+                {/* Resources Analysis */}
+                {peData.resources && peData.resources.length > 0 && (
+                  <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">
+                    <button
+                      className="w-full px-5 py-4 flex justify-between items-center text-left"
+                      onClick={() => toggleSection("resources")}
+                    >
+                      <h4 className="text-base font-medium text-white">Resources Analysis</h4>
+                      {expandedSections.resources ? (
+                        <ChevronUp className="h-5 w-5 text-zinc-400" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-zinc-400" />
+                      )}
+                    </button>
+
+                    {expandedSections.resources && (
+                      <div className="px-5 pb-5 space-y-3">
+                        <div className="p-3 rounded-lg bg-black/30 backdrop-blur-sm border border-zinc-800/50">
+                          <ResourcesAnalysis resources={peData.resources} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Suspicious Indicators */}
                 <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">

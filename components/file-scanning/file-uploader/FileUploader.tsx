@@ -43,8 +43,8 @@ export function FileUploader({
     setFileError(null)
     
     // Basic file validation - could be expanded
-    if (file.size > 100 * 1024 * 1024) {
-      setFileError("File size exceeds 100MB limit")
+    if (file.size > 10 * 1024 * 1024 * 1024) {
+      setFileError("File size exceeds 10GB limit")
       return
     }
     

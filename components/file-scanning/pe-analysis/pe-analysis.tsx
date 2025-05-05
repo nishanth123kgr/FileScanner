@@ -9,7 +9,9 @@ import PEHeaders from "./components/PEHeaders"
 import { SectionsAnalysis } from "./components/SectionsAnalysis"
 import { ImportsAnalysis } from "./components/ImportsAnalysis"
 import { SuspiciousIndicators } from "./components/SuspiciousIndicators"
-import { analyzePEFile } from "./utils/pe-parser"
+import { ResourcesAnalysis } from "./components/ResourcesAnalysis"
+import { analyzePEWithWasm } from "./utils/pe-wasm-loader"
+import { adaptNewPEFormat } from "./utils/pe-parser"
 
 // Maximum size for PE header analysis to keep performance fast
 const MAX_HEADER_SIZE = 1024 * 1024; // First 1MB is enough for PE headers
@@ -21,53 +23,26 @@ export default function PEAnalysis({ file }: { file: File | null }) {
   const [activeTab, setActiveTab] = useState<string>("headers")
   const [loadProgress, setLoadProgress] = useState<number>(0)
 
-  // Function to analyze the PE file with optimized loading
+  // Function to analyze the PE file with WebAssembly module
   const analyzePEFileHandler = useCallback(async (file: File) => {
     if (!file) return
     
     try {
       setIsLoading(true)
       setError(null)
-      setLoadProgress(0)
+      setLoadProgress(10)
       
-      // We don't need the entire file for PE header analysis, just the first few MB
-      const headerSize = Math.min(file.size, MAX_HEADER_SIZE)
+      // Analyze the PE file using the WebAssembly module
+      const result = await analyzePEWithWasm(file)
+      setLoadProgress(90)
       
-      // Show loading progress while reading the file
-      let accumulatedChunks = []
-      const chunkSize = 64 * 1024 // 64KB per chunk for better UI responsiveness
-      
-      for (let position = 0; position < headerSize; position += chunkSize) {
-        // Use setTimeout to yield to UI thread
-        await new Promise(resolve => setTimeout(resolve, 0))
-        
-        const end = Math.min(position + chunkSize, headerSize)
-        const chunk = await file.slice(position, end).arrayBuffer()
-        
-        accumulatedChunks.push(new Uint8Array(chunk))
-        setLoadProgress(Math.floor((end / headerSize) * 100))
-      }
-      
-      // Combine all chunks into one buffer
-      const totalLength = accumulatedChunks.reduce((total, arr) => total + arr.length, 0)
-      const combinedBuffer = new Uint8Array(totalLength)
-      
-      let offset = 0
-      for (const chunk of accumulatedChunks) {
-        combinedBuffer.set(chunk, offset)
-        offset += chunk.length
-      }
-      
-      // Convert Uint8Array to ArrayBuffer for analyzePEFile
-      const arrayBuffer = combinedBuffer.buffer;
-      
-      // Analyze the PE file
-      const result = await analyzePEFile(arrayBuffer)
-      setAnalysis(result)
+      // Convert the result to the format expected by our components
+      const adaptedResult = adaptNewPEFormat(result)
+      setAnalysis(adaptedResult)
       setLoadProgress(100)
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error analyzing PE file:", err)
-      setError("Failed to analyze PE file. The file may not be a valid PE executable.")
+      setError(`Failed to analyze PE file: ${err.message || "Unknown error"}`)
     } finally {
       setIsLoading(false)
     }
@@ -164,7 +139,7 @@ export default function PEAnalysis({ file }: { file: File | null }) {
                 onValueChange={handleTabChange}
                 className="w-full"
               >
-                <TabsList className="grid grid-cols-4 mb-8 bg-zinc-800/50 p-1 rounded-lg w-full max-w-xl mx-auto">
+                <TabsList className="grid grid-cols-5 mb-8 bg-zinc-800/50 p-1 rounded-lg w-full max-w-xl mx-auto">
                   <TabsTrigger value="headers" className="data-[state=active]:bg-blue-600">
                     <div className="flex items-center gap-2">
                       <FileCode className="h-4 w-4" />
@@ -181,6 +156,12 @@ export default function PEAnalysis({ file }: { file: File | null }) {
                     <div className="flex items-center gap-2">
                       <Eye className="h-4 w-4" />
                       <span className="hidden sm:inline">Imports</span>
+                    </div>
+                  </TabsTrigger>
+                  <TabsTrigger value="resources" className="data-[state=active]:bg-blue-600">
+                    <div className="flex items-center gap-2">
+                      <Award className="h-4 w-4" />
+                      <span className="hidden sm:inline">Resources</span>
                     </div>
                   </TabsTrigger>
                   <TabsTrigger value="indicators" className="data-[state=active]:bg-blue-600">
@@ -207,6 +188,18 @@ export default function PEAnalysis({ file }: { file: File | null }) {
                 {activeTab === "imports" && (
                   <TabsContent value="imports" className="mt-0">
                     <ImportsAnalysis imports={analysis.imports || []} />
+                  </TabsContent>
+                )}
+                
+                {activeTab === "resources" && (
+                  <TabsContent value="resources" className="mt-0">
+                    {analysis.resources && analysis.resources.length > 0 ? (
+                      <ResourcesAnalysis resources={analysis.resources} />
+                    ) : (
+                      <div className="p-4 bg-black/20 rounded-md text-center text-zinc-500">
+                        No resources found in this PE file
+                      </div>
+                    )}
                   </TabsContent>
                 )}
                 

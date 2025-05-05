@@ -7,13 +7,17 @@ export interface SuspiciousIndicatorsProps {
 }
 
 export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps) {
+  // Check if we're using the new data format
+  const isNewFormat = 'header' in analysisData;
+  
   // Component implementation
   const suspiciousIndicators = [];
   
   // Check for high entropy sections (possible packing/encryption)
-  const highEntropySection = analysisData.sections.find(
-    section => parseFloat(section.entropy) > 7.0
-  );
+  const highEntropySection = analysisData.sections.find(section => {
+    const entropy = parseFloat(section.entropy);
+    return entropy > 7.0;
+  });
   
   if (highEntropySection) {
     suspiciousIndicators.push({
@@ -25,13 +29,17 @@ export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps
   
   // Check for potentially suspicious imports
   const suspiciousImportKeywords = ['inject', 'memory', 'remote', 'process', 'write'];
-  const hasSuspiciousImports = analysisData.imports?.some(dll => 
-    dll.functions.some(func => 
+  
+  // Handle imports differently based on format
+  const hasSuspiciousImports = analysisData.imports?.some(dll => {
+    // Functions are accessed the same way in both formats
+    const functions = dll.functions || [];
+    return functions.some((func: string) => 
       suspiciousImportKeywords.some(keyword => 
         func.toLowerCase().includes(keyword)
       )
-    )
-  );
+    );
+  });
   
   if (hasSuspiciousImports) {
     suspiciousIndicators.push({
@@ -42,9 +50,14 @@ export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps
   }
 
   // Check for low entropy sections that are unusual
-  const unusualLowEntropySection = analysisData.sections.find(
-    section => parseFloat(section.entropy) < 0.5 && section.raw_size > 1024
-  );
+  const unusualLowEntropySection = analysisData.sections.find(section => {
+    const entropy = parseFloat(section.entropy);
+    const rawSize = isNewFormat 
+      ? (section as any).rawSize?.decimal || section.raw_size || 0
+      : section.raw_size || 0;
+      
+    return entropy < 0.5 && rawSize > 1024;
+  });
 
   if (unusualLowEntropySection) {
     suspiciousIndicators.push({
@@ -55,17 +68,43 @@ export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps
   }
 
   // Check for executable sections with unusual names
+  // This check depends on characteristics field which may be structured differently
+  // in the new format, so adjust accordingly if the new data has this info
   const commonSectionNames = ['.text', '.code', 'CODE', 'INIT', '.init'];
-  const unusualExecutableSection = analysisData.sections.find(
-    section => (section.characteristics & 0x20000000) && !commonSectionNames.includes(section.name)
+  
+  // In the new format, we may not have the characteristics bitmask directly,
+  // so we'll need a different approach to check for executable sections
+  // This is a simplified version that just checks for unusual section names
+  const unusualSectionNames = analysisData.sections.filter(section =>
+    !commonSectionNames.includes(section.name) &&
+    section.name !== '.data' &&
+    section.name !== '.rdata' &&
+    section.name !== '.rsrc'
   );
-
-  if (unusualExecutableSection) {
+  
+  if (unusualSectionNames.length > 0) {
     suspiciousIndicators.push({
-      title: 'Unusual executable section',
-      description: `Section "${unusualExecutableSection.name}" is marked as executable but has an uncommon name.`,
-      severity: 'medium'
+      title: 'Unusual section names',
+      description: `Found sections with uncommon names: ${unusualSectionNames.map(s => s.name).join(', ')}`,
+      severity: 'low'
     });
+  }
+  
+  // Check for signature status
+  if (isNewFormat && analysisData.signature) {
+    if (analysisData.signature.isSigned === false) {
+      suspiciousIndicators.push({
+        title: 'Unsigned executable',
+        description: 'This executable is not digitally signed, which is common for legitimate software.',
+        severity: 'low'
+      });
+    } else if (analysisData.signature.isValid === false) {
+      suspiciousIndicators.push({
+        title: 'Invalid signature',
+        description: 'This executable has an invalid digital signature, which could indicate tampering.',
+        severity: 'high'
+      });
+    }
   }
   
   return (
