@@ -52,6 +52,13 @@ const nextConfig = {
       });
     }
 
+    // Add WASM file handling
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+      syncWebAssembly: true,
+    };
+
     return config;
   },
 }

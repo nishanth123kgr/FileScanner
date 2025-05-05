@@ -82,6 +82,18 @@ jobs:
         env:
           NODE_ENV: production
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+      # Add explicit check to ensure WASM files are copied to the output directory
+      - name: Verify and copy WASM files
+        run: |
+          echo "Ensuring WASM files are in the output directory"
+          mkdir -p ./out/wasm
+          if [ -d "./public/wasm" ]; then
+            cp -v ./public/wasm/* ./out/wasm/
+            echo "WASM files copied successfully"
+            ls -la ./out/wasm/
+          else
+            echo "Warning: public/wasm directory not found"
+          fi
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
