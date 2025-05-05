@@ -27,17 +27,24 @@ export async function initPEAnalyzerWasm(): Promise<any> {
           locateFile: (path: string) => {
             console.log(`Locating WebAssembly file: ${path}`);
             
-            // Get the base URL for the current deployment
-            // This ensures it works both locally and when deployed to GitHub Pages
-            const baseUrl = window.location.origin;
+            // Get the current path to determine base path
+            const currentPath = window.location.pathname;
+            // For GitHub Pages, we need to consider the repository name in the URL
+            // Extract basePath by removing any trailing path segments
+            const pathParts = currentPath.split('/');
+            // If it's a GitHub Pages site (e.g., username.github.io/repo-name/),
+            // we need to include the repository name in the base path
+            const basePath = pathParts.length > 2 ? `/${pathParts[1]}` : '';
             
-            // Use relative path to avoid cross-origin issues
-            return new URL(`/wasm/${path}`, baseUrl).toString();
+            console.log(`Using base path: ${basePath}`);
+            
+            // Include the basePath in the WASM file path
+            return `${basePath}/${path}`;
           }
         };
         
         // Dynamic import for the WASM module
-        const PEAnalyzerModule = await import('../../../../public/wasm/pe_analyzer.js');
+        const PEAnalyzerModule = await import('../../../../public/pe_analyzer.js');
         
         // Pass our config to the module
         const module = await PEAnalyzerModule.default((window as any).PEAnalyzerConfig);
