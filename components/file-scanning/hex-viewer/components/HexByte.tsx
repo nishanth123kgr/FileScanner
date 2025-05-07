@@ -21,7 +21,7 @@ export const HexByte = ({ byte, highlightedBytes }: HexByteProps) => {
     <span
       className={`inline-block w-6 ${
         isHighlighted 
-          ? "text-white bg-purple-500/40 rounded px-0.5" 
+          ? "text-white bg-cyan-500/40 rounded px-0.5" 
           : "text-zinc-300"
       }`}
       title={`0x${hexValue} (${byte})`}

@@ -116,12 +116,12 @@ export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps
           {suspiciousIndicators.map((indicator, index) => (
             <div 
               key={index} 
-              className={`bg-black/20 p-3 rounded-md border ${
+              className={`bg-black/30 p-3 rounded-md border ${
                 indicator.severity === 'high' 
                   ? 'border-red-500/30' 
                   : indicator.severity === 'medium' 
                     ? 'border-amber-500/30' 
-                    : 'border-zinc-600/30'
+                    : 'border-zinc-900'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -152,7 +152,7 @@ export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps
           ))}
         </div>
       ) : (
-        <div className="bg-black/20 p-4 rounded-md border border-green-500/30">
+        <div className="bg-black/30 p-4 rounded-md border border-green-500/30">
           <div className="flex items-start gap-3">
             <div className="bg-green-500/10 text-green-500 rounded-full p-1.5">
               <ShieldCheck className="h-4 w-4" />
@@ -168,7 +168,7 @@ export function SuspiciousIndicators({ analysisData }: SuspiciousIndicatorsProps
         </div>
       )}
 
-      <div className="bg-zinc-900/50 p-3 rounded-md border border-zinc-800/50 mt-4">
+      <div className="bg-black/30 p-3 rounded-md border border-zinc-900 mt-4">
         <div className="flex gap-2 items-center mb-2">
           <Shield className="h-4 w-4 text-blue-400" />
           <h5 className="text-xs font-medium text-zinc-300">Risk Assessment Factors</h5>

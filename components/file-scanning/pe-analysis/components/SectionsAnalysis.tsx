@@ -19,7 +19,7 @@ export function SectionsAnalysis({ sections }: SectionsAnalysisProps) {
           <h4 className="text-sm font-medium text-blue-400">Section Entropy Analysis</h4>
           <Badge variant="outline" className="bg-zinc-900/50 text-xs">0 sections</Badge>
         </div>
-        <div className="p-3 bg-black/20 rounded-md text-center text-zinc-500 border border-zinc-800/50">
+        <div className="p-3 bg-black/30 rounded-md text-center text-zinc-500 border border-zinc-900">
           No section data available
         </div>
       </div>
@@ -189,8 +189,8 @@ export function SectionsAnalysis({ sections }: SectionsAnalysisProps) {
               <div 
                 key={index}
                 className={cn(
-                  "grid grid-cols-12 gap-x-1 items-center text-xs px-2 py-1.5 rounded hover:bg-zinc-900/30 border border-transparent",
-                  index % 2 === 0 ? "bg-black/20" : "bg-black/10"
+                  "grid grid-cols-12 gap-x-1 items-center text-xs px-2 py-1.5 rounded hover:bg-zinc-900/30",
+                  index % 2 === 0 ? "bg-black/30 border border-zinc-900" : "bg-black/20 border border-zinc-900"
                 )}
               >
                 <div className="col-span-2 font-medium text-white truncate">
@@ -239,7 +239,7 @@ export function SectionsAnalysis({ sections }: SectionsAnalysisProps) {
           })}
         </div>
       ) : (
-        <div className="p-3 bg-black/20 rounded-md text-center text-zinc-500 border border-zinc-800/50">
+        <div className="p-3 bg-black/30 rounded-md text-center text-zinc-500 border border-zinc-900">
           No section data available
         </div>
       )}

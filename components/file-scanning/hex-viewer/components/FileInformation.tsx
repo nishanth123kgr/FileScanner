@@ -25,28 +25,28 @@ export const FileInformation = ({ fileSize, hexDataSize }: FileInformationProps)
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-          <div className="p-3 rounded-lg bg-zinc-800/50 hover:bg-zinc-800/70 transition-colors border border-zinc-700/30">
+          <div className="p-3 rounded-lg bg-zinc-800/50 hover:bg-zinc-800/70 transition-colors border border-zinc-700/30 bg-zinc-900/40 rounded-lg border border-zinc-800/50">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/30">
                 <Fingerprint className="h-4 w-4 text-blue-500" />
               </div>
               <div>
                 <h4 className="text-white font-medium">File Size</h4>
-                <p className="text-sm text-zinc-300 mt-1 bg-black/40 p-1.5 rounded border border-zinc-800/50 font-mono">
+                <p className="text-xs text-zinc-300 mt-1 p-1.5 rounded border font-mono bg-black/30 border border-zinc-900">
                   {fileSize > 0 ? `${formatFileSize(fileSize)} (${fileSize.toLocaleString()} bytes)` : "N/A"}
                 </p>
               </div>
             </div>
           </div>
           
-          <div className="p-3 rounded-lg bg-zinc-800/50 hover:bg-zinc-800/70 transition-colors border border-zinc-700/30">
+          <div className="p-3 rounded-lg hover:bg-zinc-800/70 transition-colors border bg-zinc-900/40 border-zinc-800/50">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/30">
                 <Fingerprint className="h-4 w-4 text-blue-500" />
               </div>
               <div>
                 <h4 className="text-white font-medium">Loaded Data</h4>
-                <p className="text-sm text-zinc-300 mt-1 bg-black/40 p-1.5 rounded border border-zinc-800/50 font-mono">
+                <p className="text-xs text-zinc-300 mt-1 p-1.5 rounded border font-mono bg-black/30 border border-zinc-900">
                   {hexDataSize ? `${(hexDataSize / 1024).toFixed(2)} KB loaded` : "None"}
                 </p>
               </div>

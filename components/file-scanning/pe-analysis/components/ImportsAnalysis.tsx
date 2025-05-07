@@ -28,7 +28,7 @@ export function ImportsAnalysis({ imports }: ImportsAnalysisProps) {
       {imports?.length > 0 ? (
         <div className="space-y-3">
           {imports.map((dll, index) => (
-            <div key={index} className="bg-black/20 p-3 rounded-md">
+            <div key={index} className="bg-black/30 p-3 rounded-md border border-zinc-900">
               <div className="flex flex-wrap items-center gap-2">
                 <h5 className="font-medium text-zinc-300">{dll.dll}</h5>
                 {isNewFormat && (
@@ -83,7 +83,7 @@ export function ImportsAnalysis({ imports }: ImportsAnalysisProps) {
           ))}
         </div>
       ) : (
-        <div className="bg-black/20 p-4 rounded-md">
+        <div className="bg-black/30 p-4 rounded-md border border-zinc-900">
           <div className="text-center text-zinc-500">
             No import information available. This could be due to:
           </div>

@@ -17,7 +17,7 @@ export const AsciiChar = ({ byte, highlightedBytes }: AsciiCharProps) => {
   const { char, tooltip } = byteToAsciiChar(byte)
   const charClass = getCharacterClass(byte)
   const isHighlighted = isHighlightedByte(byte, highlightedBytes)
-  const highlightClass = isHighlighted ? "bg-purple-500/30 text-white rounded px-0.5" : ""
+  const highlightClass = isHighlighted ? "bg-teal-500/30 text-white rounded px-0.5" : ""
   
   return (
     <span 

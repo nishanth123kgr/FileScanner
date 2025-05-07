@@ -102,8 +102,8 @@ export function ResourcesAnalysis({ resources }: ResourcesAnalysisProps) {
               <div 
                 key={index}
                 className={cn(
-                  "grid grid-cols-12 gap-x-1 items-center text-xs px-2 py-1.5 rounded hover:bg-zinc-900/30 border border-transparent",
-                  index % 2 === 0 ? "bg-black/20" : "bg-black/10"
+                  "grid grid-cols-12 gap-x-1 items-center text-xs px-2 py-1.5 rounded hover:bg-zinc-900/30",
+                  index % 2 === 0 ? "bg-black/30 border border-zinc-900" : "bg-black/20 border border-zinc-900"
                 )}
               >
                 <div className="col-span-3 flex items-center gap-2">
@@ -157,7 +157,7 @@ export function ResourcesAnalysis({ resources }: ResourcesAnalysisProps) {
           })}
         </div>
       ) : (
-        <div className="p-3 bg-black/20 rounded-md text-center text-zinc-500 border border-zinc-800/50">
+        <div className="p-3 bg-black/30 rounded-md text-center text-zinc-500 border border-zinc-900">
           <FileX className="h-4 w-4 mx-auto mb-1 opacity-50" />
           No resource data available
         </div>

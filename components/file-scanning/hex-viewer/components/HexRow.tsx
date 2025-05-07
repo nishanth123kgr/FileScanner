@@ -36,8 +36,8 @@ export const HexRow = ({
   }
   
   return (
-    <div className="flex py-1.5 border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors">
-      <div className="w-20 px-3 text-purple-400">
+    <div className="flex py-1.5 border-b border-zinc-800/30 hover:bg-gradient-to-r hover:from-zinc-800/60 hover:to-zinc-800/40 transition-colors">
+      <div className="w-20 px-3 text-cyan-400">
         {formatHexOffset(offset)}
       </div>
       <div className="flex-1 px-3">

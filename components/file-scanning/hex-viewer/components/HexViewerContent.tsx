@@ -59,7 +59,7 @@ export const HexViewerContent = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      <Card className="card-glassmorphism p-6 border-0 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl relative overflow-hidden">
+      <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6 relative overflow-hidden">
         <div className="absolute -bottom-24 -right-24 w-32 h-32 rounded-full bg-blue-500/5 blur-2xl"></div>
         
         {!file ? (
@@ -69,10 +69,11 @@ export const HexViewerContent = ({
         ) : (
           <div className="overflow-x-auto relative z-10">
             <div className="font-mono text-sm">
-              <div className="flex bg-zinc-800/70 text-zinc-400 py-2 rounded-t-lg">
-                <div className="w-20 px-3 text-purple-400 font-medium">Offset</div>
+              {/* Updated header with consistent color styling */}
+              <div className="flex bg-gradient-to-r from-zinc-900/90 to-zinc-800/90 text-zinc-400 py-2 rounded-t-lg border-b border-zinc-700/50">
+                <div className="w-20 px-3 text-cyan-400 font-medium">Offset</div>
                 <div className="flex-1 px-3 font-medium">00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F</div>
-                <div className="w-32 px-3 text-blue-400 font-medium">ASCII</div>
+                <div className="w-44 px-3 text-teal-400 font-medium border-l border-zinc-700/50">ASCII</div>
               </div>
 
               <div 

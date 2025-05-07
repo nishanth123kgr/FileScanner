@@ -119,11 +119,11 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {dosHeader && (
             <>
-              <div className="bg-black/20 p-2 rounded-md">
+              <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
                 <div className="text-xs text-zinc-500">e_magic</div>
                 <div className="text-sm text-zinc-300 font-mono">{dosHeader.e_magic}</div>
               </div>
-              <div className="bg-black/20 p-2 rounded-md">
+              <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
                 <div className="text-xs text-zinc-500">e_lfanew</div>
                 <div className="text-sm text-zinc-300 font-mono">
                   {typeof dosHeader.e_lfanew === 'number' ? 
@@ -137,7 +137,7 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
             </>
           )}
           {!dosHeader && (
-            <div className="bg-black/20 p-2 rounded-md col-span-2">
+            <div className="bg-black/30 p-2 rounded-md border border-zinc-900 col-span-2">
               <div className="text-sm text-zinc-500">No DOS header information available</div>
             </div>
           )}
@@ -149,30 +149,30 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
         <h4 className="text-sm font-medium text-blue-400 mb-2">NT File Header</h4>
         <div className="space-y-2">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <div className="bg-black/20 p-2 rounded-md">
+            <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
               <div className="text-xs text-zinc-500">Machine</div>
               <div className="text-sm text-zinc-300">{getMachine()}</div>
             </div>
-            <div className="bg-black/20 p-2 rounded-md">
+            <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
               <div className="text-xs text-zinc-500">Number of Sections</div>
               <div className="text-sm text-zinc-300">{getNumberOfSections()}</div>
             </div>
-            <div className="bg-black/20 p-2 rounded-md">
+            <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
               <div className="text-xs text-zinc-500">Time/Date Stamp</div>
               <div className="text-sm text-zinc-300">{getTimestamp()}</div>
             </div>
-            <div className="bg-black/20 p-2 rounded-md">
+            <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
               <div className="text-xs text-zinc-500">Size of Optional Header</div>
               <div className="text-sm text-zinc-300">{getOptionalHeaderSize()}</div>
             </div>
           </div>
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">Characteristics</div>
             <div className="flex flex-wrap gap-1 mt-1">
               {getCharacteristicsFlags().map((desc: string, index: number) => (
                 <Badge 
                   key={index}
-                  className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700 text-xs"
+                  className="bg-zinc-900 text-zinc-300 hover:bg-zinc-800 text-xs"
                 >
                   {desc}
                 </Badge>
@@ -186,35 +186,35 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
       <div className="mt-4">
         <h4 className="text-sm font-medium text-blue-400 mb-2">NT Optional Header</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">Magic</div>
             <div className="text-sm text-zinc-300">{getMagic()}</div>
           </div>
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">Entry Point</div>
             <div className="text-sm text-zinc-300 font-mono">
               {parseInt(getEntryPoint(), 16)} (0x{getEntryPoint()})
             </div>
           </div>
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">Image Base</div>
             <div className="text-sm text-zinc-300 font-mono">
               {parseInt(getImageBase(), 16)} (0x{getImageBase()})
             </div>
           </div>
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">Section Alignment</div>
             <div className="text-sm text-zinc-300 font-mono">
               {getSectionAlignment()} (0x{getSectionAlignment().toString(16)})
             </div>
           </div>
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">File Alignment</div>
             <div className="text-sm text-zinc-300 font-mono">
               {getFileAlignment()} (0x{getFileAlignment().toString(16)})
             </div>
           </div>
-          <div className="bg-black/20 p-2 rounded-md">
+          <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
             <div className="text-xs text-zinc-500">Subsystem</div>
             <div className="text-sm text-zinc-300">{getSubsystem()}</div>
           </div>
@@ -224,7 +224,7 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
       {/* Data Directories */}
       <div className="mt-4">
         <h4 className="text-sm font-medium text-blue-400 mb-2">Data Directories</h4>
-        <div className="bg-black/20 p-2 rounded-md">
+        <div className="bg-black/30 p-2 rounded-md border border-zinc-900">
           {dataDirectories && dataDirectories.length > 0 ? (
             <div className="space-y-2">
               {dataDirectories.slice(0, showAllDirectories ? dataDirectories.length : 4).map((dir: any, index: number) => (
