@@ -114,17 +114,6 @@ export function FileUploader({
 
   return (
     <div className="space-y-8">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <p className="text-zinc-400 max-w-2xl">
-          Upload any file for comprehensive security analysis. Our advanced scanner detects malicious patterns, 
-          suspicious structures, and potential threats.
-        </p>
-      </motion.div>
-
       <AnimatePresence mode="wait">
         <motion.div
           key={internalFileSelected ? "preview" : "droparea"}
