@@ -62,7 +62,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.5 }}
         >
-          <Card className="card-glassmorphism p-6 border-0 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl">
+          <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6">
             <div className="flex items-center justify-center py-10">
               <div className="animate-pulse flex flex-col items-center">
                 <FileSearch className="h-10 w-10 text-blue-500 mb-4" />
@@ -80,7 +80,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.5 }}
         >
-          <Card className="card-glassmorphism p-6 border-0 bg-gradient-to-br from-red-900/20 to-black/80 backdrop-blur-xl">
+          <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
                 <AlertTriangle className="h-6 w-6 text-red-500" />
@@ -105,7 +105,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
           >
-            <Card className="card-glassmorphism p-6 border-0 relative overflow-hidden bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl">
+            <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6 relative overflow-hidden">
               <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]"></div>
               <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-blue-500/10 blur-3xl"></div>
               <div className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-purple-500/10 blur-3xl"></div>
@@ -114,20 +114,20 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
             </Card>
           </motion.div>
 
-          {/* <motion.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <Card className="card-glassmorphism p-6 border-0 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl">
+            <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center">
                 <FileSearch className="h-5 w-5 text-blue-500 mr-2" />
                 PE File Analysis
-              </h3> */}
+              </h3>
 
               <div className="space-y-6">
                 {/* PE Headers Section */}
-                <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">
+                <div className="bg-zinc-900/40 rounded-lg border border-zinc-800/50">
                   <button
                     className="w-full px-5 py-4 flex justify-between items-center text-left"
                     onClick={() => toggleSection("headers")}
@@ -150,7 +150,8 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
                 </div>
 
                 {/* Sections Analysis */}
-                <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">
+                <div className="bg-zinc-900/40 rounded-lg border border-zinc-800/50">
+                
                   <button
                     className="w-full px-5 py-4 flex justify-between items-center text-left"
                     onClick={() => toggleSection("sections")}
@@ -173,7 +174,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
                 </div>
 
                 {/* Imports Analysis */}
-                <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">
+                <div className="bg-zinc-900/40 rounded-lg border border-zinc-800/50">
                   <button
                     className="w-full px-5 py-4 flex justify-between items-center text-left"
                     onClick={() => toggleSection("imports")}
@@ -197,7 +198,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
 
                 {/* Resources Analysis */}
                 {peData.resources && peData.resources.length > 0 && (
-                  <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">
+                <div className="bg-zinc-900/40 rounded-lg border border-zinc-800/50">
                     <button
                       className="w-full px-5 py-4 flex justify-between items-center text-left"
                       onClick={() => toggleSection("resources")}
@@ -221,7 +222,7 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
                 )}
 
                 {/* Suspicious Indicators */}
-                <div className="rounded-xl bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 backdrop-blur-sm overflow-hidden">
+                <div className="bg-zinc-900/40 rounded-lg border border-zinc-800/50">
                   <button
                     className="w-full px-5 py-4 flex justify-between items-center text-left"
                     onClick={() => toggleSection("indicators")}
@@ -243,8 +244,8 @@ export default function PEAnalysis({ fileName, peData: rawPeData, isLoading, err
                   )}
                 </div>
               </div>
-            {/* </Card>
-          </motion.div> */}
+            </Card>
+          </motion.div>
         </div>
       )}
     </div>

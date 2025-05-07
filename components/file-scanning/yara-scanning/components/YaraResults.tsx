@@ -169,81 +169,79 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
         className="relative"
       >
         <div className="absolute -z-10 w-full h-64 bg-gradient-to-b from-red-900/20 via-amber-900/10 to-transparent rounded-3xl blur-xl"></div>
-        <Card className="overflow-hidden backdrop-blur-md bg-black/40 border border-zinc-800/50">
-          <div className="p-6 relative">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                  <Shield className="h-5 w-5 text-amber-500" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-medium text-white">YARA Threat Analysis</h2>
-                  <p className="text-zinc-400 text-sm">
-                    {file?.name ? `Analyzing ${file.name} for malicious patterns` : "No file selected"}
-                  </p>
-                </div>
+        <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6">
+          <div className="flex flex-col md:flex-row gap-4 md:justify-between md:items-center mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                <Shield className="h-5 w-5 text-amber-500" />
               </div>
-              
-              
-            </div>
-            
-            {yaraData?.matched_rules && yaraData.matched_rules.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-                <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider">Total Threats</p>
-                    <h3 className="text-2xl font-bold text-white">{totalThreats}</h3>
-                  </div>
-                  <div className="p-3 bg-zinc-800 rounded-lg">
-                    <AlertCircle className="h-5 w-5 text-zinc-400" />
-                  </div>
-                </div>
-                
-                <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider">Critical Threats</p>
-                    <h3 className="text-2xl font-bold text-red-500">{criticalThreats}</h3>
-                  </div>
-                  <div className="p-3 bg-red-500/10 rounded-lg">
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                  </div>
-                </div>
-                
-                <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider">Threat Categories</p>
-                    <h3 className="text-2xl font-bold text-amber-500">{Object.keys(threatCategories).length}</h3>
-                  </div>
-                  <div className="p-3 bg-amber-500/10 rounded-lg">
-                    <FileWarning className="h-5 w-5 text-amber-500" />
-                  </div>
-                </div>
-                
-                <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider">Total Matches</p>
-                    <h3 className="text-2xl font-bold text-blue-400">{totalMatchCount}</h3>
-                  </div>
-                  <div className="p-3 bg-blue-500/10 rounded-lg">
-                    <Fingerprint className="h-5 w-5 text-blue-400" />
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {isScanning && (
-              <div className="mt-6">
-                <div className="flex justify-between text-sm text-zinc-400 mb-2">
-                  <span>Scanning file...</span>
-                  <span>{scanProgress}%</span>
-                </div>
-                <Progress value={scanProgress} className="h-1.5 bg-zinc-800 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-red-500" />
-                <p className="text-zinc-500 text-xs mt-2">
-                  Processed {currentChunk} of {totalChunks} chunks
+              <div>
+                <h2 className="text-lg font-medium text-white">YARA Threat Analysis</h2>
+                <p className="text-zinc-400 text-sm">
+                  {file?.name ? `Analyzing ${file.name} for malicious patterns` : "No file selected"}
                 </p>
               </div>
-            )}
+            </div>
+            
+            
           </div>
+          
+          {yaraData?.matched_rules && yaraData.matched_rules.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+              <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Total Threats</p>
+                  <h3 className="text-2xl font-bold text-white">{totalThreats}</h3>
+                </div>
+                <div className="p-3 bg-zinc-800 rounded-lg">
+                  <AlertCircle className="h-5 w-5 text-zinc-400" />
+                </div>
+              </div>
+              
+              <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Critical Threats</p>
+                  <h3 className="text-2xl font-bold text-red-500">{criticalThreats}</h3>
+                </div>
+                <div className="p-3 bg-red-500/10 rounded-lg">
+                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                </div>
+              </div>
+              
+              <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Threat Categories</p>
+                  <h3 className="text-2xl font-bold text-amber-500">{Object.keys(threatCategories).length}</h3>
+                </div>
+                <div className="p-3 bg-amber-500/10 rounded-lg">
+                  <FileWarning className="h-5 w-5 text-amber-500" />
+                </div>
+              </div>
+              
+              <div className="bg-zinc-900/50 border border-zinc-800 backdrop-blur-md rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider">Total Matches</p>
+                  <h3 className="text-2xl font-bold text-blue-400">{totalMatchCount}</h3>
+                </div>
+                <div className="p-3 bg-blue-500/10 rounded-lg">
+                  <Fingerprint className="h-5 w-5 text-blue-400" />
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {isScanning && (
+            <div className="mt-6">
+              <div className="flex justify-between text-sm text-zinc-400 mb-2">
+                <span>Scanning file...</span>
+                <span>{scanProgress}%</span>
+              </div>
+              <Progress value={scanProgress} className="h-1.5 bg-zinc-800 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-red-500" />
+              <p className="text-zinc-500 text-xs mt-2">
+                Processed {currentChunk} of {totalChunks} chunks
+              </p>
+            </div>
+          )}
         </Card>
       </motion.div>
       
@@ -254,7 +252,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Card className="overflow-hidden border-red-900/30 bg-black/40 backdrop-blur-md">
+          <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 overflow-hidden border-red-900/30">
             <div className="p-6 flex items-center gap-4">
               <div className="p-3 rounded-full bg-red-500/10 border border-red-500/20">
                 <AlertTriangle className="h-5 w-5 text-red-500" />
@@ -277,7 +275,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
             >
-              <Card className="bg-black/40 backdrop-blur-md border border-zinc-800/50 overflow-hidden">
+              <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 overflow-hidden">
                 <div className="p-6">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <Tabs 
@@ -606,7 +604,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
             >
-              <Card className="bg-black/40 backdrop-blur-md border border-zinc-800/50">
+              <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50">
                 <div className="p-8 flex flex-col items-center justify-center text-center">
                   <div className="p-4 rounded-full bg-green-500/10 border border-green-500/20 mb-4">
                     <CheckCircle className="h-6 w-6 text-green-500" />
@@ -624,7 +622,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
             >
-              <Card className="bg-black/40 backdrop-blur-md border border-zinc-800/50">
+              <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50">
                 <div className="p-8 flex flex-col items-center justify-center text-center">
                   <div className="p-4 rounded-full bg-amber-500/10 border border-amber-500/20 mb-4">
                     <Shield className="h-6 w-6 text-amber-500" />
@@ -653,7 +651,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
         >
-          <Card className="bg-black/40 backdrop-blur-md border border-zinc-800/50">
+          <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50">
             <div className="p-6">
               <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
                 <Info className="h-5 w-5 text-blue-400" />

@@ -27,7 +27,7 @@ export const HexViewerHeader = ({ file, fileSize, onSearch }: HexViewerHeaderPro
       animate={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.5 }}
     >
-      <Card className="card-glassmorphism p-6 border-0 relative overflow-hidden bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl">
+      <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]"></div>
         <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-blue-500/10 blur-3xl"></div>
         <div className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-purple-500/10 blur-3xl"></div>

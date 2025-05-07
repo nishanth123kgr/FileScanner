@@ -17,7 +17,7 @@ export const FileInformation = ({ fileSize, hexDataSize }: FileInformationProps)
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <Card className="card-glassmorphism p-6 border-0 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl relative overflow-hidden">
+      <Card className="rounded-lg text-card-foreground shadow-none animate-fadeIn bg-black/40 backdrop-blur-md border border-zinc-800/50 p-6 relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-32 h-32 rounded-full bg-purple-500/5 blur-2xl"></div>
         <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2 relative z-10">
           <Fingerprint className="h-5 w-5 text-purple-500" />

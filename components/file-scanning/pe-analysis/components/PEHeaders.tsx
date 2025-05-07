@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import type { PEAnalysisResult, DataDirectory } from '../utils/pe-parser';
 
@@ -7,6 +7,8 @@ interface PEHeadersProps {
 }
 
 export default function PEHeaders({ analysisData }: PEHeadersProps) {
+  const [showAllDirectories, setShowAllDirectories] = useState(false);
+
   // Add debug log for incoming data
   React.useEffect(() => {
     console.log('PEHeaders received data:', {
@@ -225,7 +227,7 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
         <div className="bg-black/20 p-2 rounded-md">
           {dataDirectories && dataDirectories.length > 0 ? (
             <div className="space-y-2">
-              {dataDirectories.slice(0, 4).map((dir: any, index: number) => (
+              {dataDirectories.slice(0, showAllDirectories ? dataDirectories.length : 4).map((dir: any, index: number) => (
                 <div key={index} className="flex justify-between">
                   <span className="text-sm text-zinc-400">{dir.name}</span>
                   <span className="text-sm text-zinc-300 font-mono">
@@ -240,9 +242,14 @@ export default function PEHeaders({ analysisData }: PEHeadersProps) {
                 </div>
               ))}
               {dataDirectories.length > 4 && (
-                <div className="text-xs text-zinc-500 mt-1">
-                  + {dataDirectories.length - 4} more directories
-                </div>
+                <button 
+                  onClick={() => setShowAllDirectories(!showAllDirectories)}
+                  className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
+                >
+                  {showAllDirectories 
+                    ? '▲ Show less' 
+                    : `▼ Show all ${dataDirectories.length} directories`}
+                </button>
               )}
             </div>
           ) : (
