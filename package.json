@@ -52,6 +52,7 @@
     "js-md5": "^0.8.3",
     "js-sha1": "^0.7.0",
     "js-sha256": "^0.11.0",
+    "libyara-wasm": "^1.2.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "^0.4.4",

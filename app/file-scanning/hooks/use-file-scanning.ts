@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { formatFileSize, getFileTypeFromExtension } from "../utils/file-utils";
 import { analyzeFileProgressively } from "../utils/file-analyzer";
 import { FileTabType, PEAnalysisResult } from "../types";
+import { initializeYaraScan } from "@/components/file-scanning/yara-scanning/utils/yara-wasm";
 
 export function useFileScanning() {
   const [activeTab, setActiveTab] = useState<FileTabType>("upload");
@@ -19,6 +20,7 @@ export function useFileScanning() {
   const [parseError, setParseError] = useState<string | null>(null);
   const [isPEFile, setIsPEFile] = useState<boolean>(false);
   const [isLargeFile, setIsLargeFile] = useState<boolean>(false);
+  const [yaraData, setYaraData] = useState<any>(null);
 
   // Get file metadata for display
   const getFileData = () => {
@@ -42,6 +44,11 @@ export function useFileScanning() {
       setPEAnalysisData(null);
       setParseError(null);
       setScanComplete(false);
+      setYaraData(null);
+      
+      // Clear previous session storage data
+      sessionStorage.removeItem('yaraResults');
+      sessionStorage.removeItem('peAnalysis');
     }
   };
 
@@ -57,16 +64,30 @@ export function useFileScanning() {
     }
 
     try {
-      // Use progressive analysis for all files
-      const result = await analyzeFileProgressively(file, setProgress);
+      // Start with 0% progress
+      setProgress(0);
+      
+      // Begin progressive analysis (50% of progress)
+      const result = await analyzeFileProgressively(file, (progressValue) => {
+        // Map the progress to 0-50%
+        setProgress(Math.floor(progressValue / 2));
+      });
       
       // Update state with analysis results
       setIsPEFile(result.isPEFile);
       setIsLargeFile(result.isLargeFile);
       setPEAnalysisData(result.peAnalysisData);
       setParseError(result.parseError);
-
+      
+      // Update progress to 50% after PE analysis
+      setProgress(50);
+      
+      // Start YARA analysis (remaining 50% of progress)
+      const yaraResults = await initializeYaraScan(file);
+      setYaraData(yaraResults);
+      
       // Complete the scan
+      setProgress(100);
       setScanning(false);
       setScanComplete(true);
       setActiveTab("results");
@@ -105,6 +126,18 @@ export function useFileScanning() {
       }
     }
   }, [activeTab, peAnalysisData, file, isParsing, isLargeFile, isPEFile]);
+  
+  // Load YARA analysis data from session storage when switching to YARA tab
+  useEffect(() => {
+    if (activeTab === "yara" && !yaraData && file) {
+      const storedData = sessionStorage.getItem('yaraResults');
+
+      if (storedData) {
+        // If we have stored data, use it
+        setYaraData(JSON.parse(storedData));
+      }
+    }
+  }, [activeTab, yaraData, file]);
 
   return {
     activeTab,
@@ -118,6 +151,7 @@ export function useFileScanning() {
     progress,
     file,
     peAnalysisData,
+    yaraData,
     isParsing,
     parseError,
     isPEFile,
