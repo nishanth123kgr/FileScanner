@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { FileSearch, Upload, AlertCircle } from "lucide-react"
+import { FileSearch, Upload, AlertCircle, Shield } from "lucide-react"
 import { motion } from "framer-motion"
 import { DragDropAreaProps } from "../types"
 
@@ -25,43 +25,80 @@ export function DragDropArea({
     >
       <input type="file" id="file-upload" className="hidden" onChange={handleFileChange} />
       
-      <label htmlFor="file-upload" className="w-full">
+      {/* Background particle animation */}
+      <div className="absolute inset-0 overflow-hidden">
+        {dragActive && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="absolute inset-0"
+          >
+            {[...Array(15)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 rounded-full bg-red-500/30"
+                initial={{ 
+                  x: Math.random() * 100 - 50 + "%", 
+                  y: -20,
+                  opacity: 0.8
+                }}
+                animate={{ 
+                  y: "110%",
+                  opacity: 0
+                }}
+                transition={{
+                  duration: 2 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2
+                }}
+              />
+            ))}
+          </motion.div>
+        )}
+      </div>
+      
+      <label htmlFor="file-upload" className="w-full z-10">
         <div className="flex flex-col items-center cursor-pointer">
           <motion.div 
             className="relative"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, rotate: [0, -5, 5, -5, 0] }}
+            transition={{ duration: 0.5 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="absolute -inset-1 bg-red-500/30 rounded-full blur-md"></div>
-            <FileSearch className="h-14 w-14 text-red-500 mb-4 relative" />
+            <Shield className="h-16 w-16 text-red-400 mb-4 relative" />
           </motion.div>
           <motion.h3 
-            className="text-xl font-medium text-white mb-2"
-            animate={{ scale: dragActive ? 1.05 : 1 }}
+            className="text-2xl font-medium mb-2 text-red-400"
+            animate={{ 
+              scale: dragActive ? 1.05 : 1
+            }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            {dragActive ? "Drop file here" : "Upload File for Analysis"}
+            {dragActive ? "Drop to Analyze" : "Upload File for Analysis"}
           </motion.h3>
           <p className="text-sm text-zinc-400 mb-6 text-center max-w-md px-4">
-            Drag & drop your file or click to browse. We'll analyze it for malware, suspicious code, and security threats.
+            Drag & drop your file or click to browse. Our advanced scanner will analyze it for malware, 
+            suspicious code patterns, and potential security threats.
           </p>
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+          <motion.div 
+            whileHover={{ scale: 1.03 }} 
+            whileTap={{ scale: 0.97 }}
+          >
             <Button 
-              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white gap-2 relative overflow-hidden shadow-lg shadow-red-500/20" 
+              className="bg-red-600 hover:bg-red-700 text-white gap-2 px-6 py-5" 
               onClick={() => document.getElementById('file-upload')?.click()}
             >
-              <span className="absolute inset-0 bg-white/10 animate-pulse rounded-md"></span>
-              <Upload className="h-4 w-4" />
-              <span className="relative">Select File</span>
+              <Upload className="h-5 w-5" />
+              <span>Select File</span>
             </Button>
           </motion.div>
         </div>
       </label>
       
       {/* Supported file info */}
-      <div className="mt-6 text-xs text-zinc-500">
-        <p className="flex items-center gap-1 justify-center">
-          <AlertCircle className="h-3 w-3" />
+      <div className="mt-8 text-xs text-zinc-400 bg-zinc-800/30 py-2 px-4 rounded-full backdrop-blur-sm">
+        <p className="flex items-center gap-2 justify-center">
+          <AlertCircle className="h-3 w-3 text-red-400" />
           <span>Supported formats: EXE, DLL, PDF, DOC, ZIP, and more</span>
         </p>
       </div>

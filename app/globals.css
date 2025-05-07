@@ -4,6 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 :root {
   --background: 0 0% 3.9%;
   --foreground: 0 0% 98%;
@@ -11,24 +13,35 @@
   --card-foreground: 0 0% 98%;
   --popover: 0 0% 3.9%;
   --popover-foreground: 0 0% 98%;
-  --primary: 0 72.2% 50.6%;
-  --primary-foreground: 0 85.7% 97.3%;
-  --secondary: 0 0% 14.9%;
+  --primary: 213 94% 68%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 217 19% 27%;
   --secondary-foreground: 0 0% 98%;
   --muted: 0 0% 14.9%;
   --muted-foreground: 0 0% 63.9%;
-  --accent: 0 0% 14.9%;
+  --accent: 262 83% 58%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
+  --border: 240 3.7% 15.9%;
   --input: 0 0% 14.9%;
-  --ring: 0 72.2% 50.6%;
+  --ring: 213 94% 68%;
   --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
 body {
   @apply bg-background text-foreground;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Custom scrollbar */
@@ -61,7 +74,7 @@ body {
 }
 
 .card-glassmorphism {
-  background: rgba(24, 24, 27, 0.6);
+  background: rgba(17, 17, 19, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(63, 63, 70, 0.3);
@@ -84,15 +97,42 @@ body {
 .grid-blueprint {
   background-size: 30px 30px;
   background-image:
-    linear-gradient(to right, rgba(220, 20, 60, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(220, 20, 60, 0.07) 1px, transparent 1px);
+    linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
 }
 
 .grid-blueprint-large {
   background-size: 80px 80px;
   background-image:
-    linear-gradient(to right, rgba(220, 20, 60, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(220, 20, 60, 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
+}
+
+/* Glow effects */
+.glow-text {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.glow-blue {
+  box-shadow: 0 0 15px 2px rgba(59, 130, 246, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 15px 2px rgba(168, 85, 247, 0.3);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 15px 2px rgba(34, 211, 238, 0.3);
+}
+
+/* Card hover effects */
+.hover-scale {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 768px) {
@@ -107,7 +147,16 @@ body {
       opacity: 1;
     }
     50% {
-      opacity: 0.5;
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes slowPulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
     }
   }
 
@@ -121,12 +170,73 @@ body {
       transform: scale(1);
     }
   }
+  
+  @keyframes slideUpFade {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes borderGlow {
+    0%, 100% {
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      border-color: rgba(59, 130, 246, 0.6);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
 
   .animate-pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+  
+  .animate-slow-pulse {
+    animation: slowPulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slideUpFade {
+    animation: slideUpFade 0.4s ease-out;
+  }
+  
+  .animate-borderGlow {
+    animation: borderGlow 2s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .animate-delay-500 {
+    animation-delay: 500ms;
   }
 }

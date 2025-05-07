@@ -54,7 +54,7 @@ export default function SecurityStatusCard({
   const colorClasses = getColorClasses()
 
   return (
-    <Card className={`${colorClasses.bg} backdrop-blur-md border-zinc-800/50 p-6 relative overflow-hidden`}>
+    <Card className={`card-glassmorphism ${colorClasses.bg} border-0 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-xl p-6 relative overflow-hidden`}>
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-lg font-medium text-zinc-200">{title}</h3>
         <div className={`p-2 rounded-full ${colorClasses.bg} ${colorClasses.border} border`}>

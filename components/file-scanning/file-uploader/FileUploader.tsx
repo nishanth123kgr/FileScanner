@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react"
 import { Card } from "@/components/ui/card"
-import { FileSearch, FileWarning, File } from "lucide-react"
+import { FileSearch, FileWarning, File, Shield } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { FileUploaderProps } from "./types"
 import { getFileTypeClass } from "./utils/fileTypeUtils"
@@ -88,24 +88,24 @@ export function FileUploader({
   // Feature card data
   const featureCards = [
     {
-      icon: <FileSearch className="h-4 w-4 text-red-400" />,
+      icon: <FileSearch className="h-5 w-5 text-red-400" />,
       title: "Static Analysis",
       description: "Examines file content without execution to identify malicious patterns",
       accentColor: "red",
       delay: 0.3
     },
     {
-      icon: <FileWarning className="h-4 w-4 text-purple-400" />,
+      icon: <FileWarning className="h-5 w-5 text-red-400" />,
       title: "PE Analysis",
       description: "Deep inspection of Windows executable files for suspicious characteristics",
-      accentColor: "purple",
+      accentColor: "red",
       delay: 0.4
     },
     {
-      icon: <File className="h-4 w-4 text-orange-400" />,
+      icon: <Shield className="h-5 w-5 text-red-400" />,
       title: "YARA Scanning",
       description: "Pattern matching with YARA rules to detect known malware signatures",
-      accentColor: "orange",
+      accentColor: "red",
       delay: 0.5
     }
   ];
@@ -113,7 +113,18 @@ export function FileUploader({
   const currentFileTypeClass = getFileTypeClass(fileName);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <p className="text-zinc-400 max-w-2xl">
+          Upload any file for comprehensive security analysis. Our advanced scanner detects malicious patterns, 
+          suspicious structures, and potential threats.
+        </p>
+      </motion.div>
+
       <AnimatePresence mode="wait">
         <motion.div
           key={internalFileSelected ? "preview" : "droparea"}
@@ -122,7 +133,7 @@ export function FileUploader({
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="card-glassmorphism p-6 red-accent-border overflow-hidden relative">
+          <Card className="card-glassmorphism red-accent-border p-6 overflow-hidden relative">
             {!internalFileSelected ? (
               <DragDropArea 
                 dragActive={dragActive}
@@ -134,7 +145,7 @@ export function FileUploader({
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                className="p-6 rounded-lg glassmorphism"
+                className="p-6 rounded-lg backdrop-blur-md bg-black/40 border border-zinc-800/50"
               >
                 <FilePreview 
                   fileName={fileName}
@@ -150,21 +161,34 @@ export function FileUploader({
                 <ScanProgress scanning={scanning} progress={progress} />
               </motion.div>
             )}
+            
+            {/* Ambient effect based on scan state */}
+            {scanning && (
+              <div className="absolute inset-0 -z-10">
+                <div className="absolute top-0 left-0 w-full h-full bg-red-500/5 rounded-full animate-pulse"></div>
+              </div>
+            )}
           </Card>
         </motion.div>
       </AnimatePresence>
 
       {/* Feature cards section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {featureCards.map((card, index) => (
-          <FeatureCard 
+          <motion.div
             key={index}
-            icon={card.icon}
-            title={card.title}
-            description={card.description}
-            accentColor={card.accentColor}
-            delay={card.delay}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: card.delay }}
+          >
+            <FeatureCard 
+              icon={card.icon}
+              title={card.title}
+              description={card.description}
+              accentColor={card.accentColor}
+              delay={card.delay}
+            />
+          </motion.div>
         ))}
       </div>
     </div>

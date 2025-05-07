@@ -20,6 +20,7 @@ interface FileContentProps {
   file: File | null;
   fileData: FileData;
   peAnalysisData?: PEAnalysisResult | null;
+  yaraData?: any; // Added yaraData prop
   onStartScan: () => void;
   onFileSelected: (file: File | null) => void;
 }
@@ -35,6 +36,7 @@ export const FileContent: React.FC<FileContentProps> = ({
   file,
   fileData,
   peAnalysisData,
+  yaraData, // Receive yaraData from parent
   onStartScan,
   onFileSelected,
 }) => {
@@ -56,7 +58,12 @@ export const FileContent: React.FC<FileContentProps> = ({
           </TabsContent>
 
           <TabsContent value="results">
-            <ScanResults file={file} fileData={fileData} peData={peAnalysisData} />
+            <ScanResults 
+              file={file} 
+              fileData={fileData} 
+              peData={peAnalysisData} 
+              yaraData={yaraData} // Pass yaraData to ScanResults component
+            />
           </TabsContent>
 
           <TabsContent value="hex">

@@ -16,6 +16,7 @@ export default function Home() {
     progress,
     file,
     peAnalysisData,
+    yaraData, // Add yaraData from the hook
     getFileData,
     handleFileSelected,
     startScan
@@ -46,6 +47,7 @@ export default function Home() {
             file={file}
             fileData={getFileData()}
             peAnalysisData={peAnalysisData}
+            yaraData={yaraData} // Pass yaraData to FileContent
             onStartScan={startScan}
             onFileSelected={handleFileSelected}
           />
@@ -64,6 +66,7 @@ export default function Home() {
           file={file}
           fileData={getFileData()}
           peAnalysisData={peAnalysisData}
+          yaraData={yaraData} // Pass yaraData to FileContent
           onStartScan={startScan}
           onFileSelected={handleFileSelected}
         />

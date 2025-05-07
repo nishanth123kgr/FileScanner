@@ -16,24 +16,28 @@ export default function Header() {
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
-    <header className="border-b border-zinc-800 bg-zinc-950">
+    <header className="border-b border-zinc-800/50 bg-black/40 backdrop-blur-xl sticky top-0 z-50 animate-fadeIn">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-red-500" />
-            <Link href="/" className="text-lg font-bold text-white">
+            <div className="relative">
+              <Shield className="h-7 w-7 text-blue-500 animate-pulse" />
+              <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-md -z-10"></div>
+            </div>
+            <Link href="/" className="text-xl font-bold text-white glow-text">
               CyberTools
             </Link>
           </div>
 
           {isMobile ? (
             <>
-              <Button variant="ghost" size="icon" onClick={toggleMenu}>
-                {isOpen ? <X className="h-5 w-5 text-red-500" /> : <Menu className="h-5 w-5 text-red-500" />}
+              <Button variant="ghost" size="icon" onClick={toggleMenu} className="relative">
+                {isOpen ? <X className="h-5 w-5 text-blue-500" /> : <Menu className="h-5 w-5 text-blue-500" />}
+                <span className="absolute inset-0 rounded-md bg-blue-500/10 -z-10"></span>
               </Button>
 
               {isOpen && (
-                <div className="absolute top-16 left-0 right-0 z-50 bg-zinc-900 border-b border-zinc-800">
+                <div className="absolute top-16 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-zinc-800/50 animate-slideUpFade">
                   <nav className="container mx-auto px-4 py-4">
                     <ul className="space-y-2">
                       <li>
@@ -42,8 +46,8 @@ export default function Header() {
                           className={cn(
                             "flex items-center gap-3 px-4 py-2 rounded-md transition-colors",
                             pathname === "/"
-                              ? "bg-red-500/10 text-red-500"
-                              : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                              ? "bg-blue-500/10 text-blue-400 border border-blue-500/30"
+                              : "text-zinc-400 hover:bg-zinc-800/50 hover:text-white",
                           )}
                           onClick={() => setIsOpen(false)}
                         >
@@ -63,10 +67,10 @@ export default function Header() {
                   <Link
                     href="/"
                     className={cn(
-                      "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+                      "flex items-center gap-2 px-4 py-2 rounded-md text-sm transition-all duration-200",
                       pathname === "/"
-                        ? "bg-red-500/10 text-red-500"
-                        : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
+                        ? "bg-blue-500/10 text-blue-400 border border-blue-500/30 shadow-sm shadow-blue-500/20"
+                        : "text-zinc-300 hover:bg-zinc-800/50 hover:text-white",
                     )}
                   >
                     <FileSearch className="h-4 w-4" />

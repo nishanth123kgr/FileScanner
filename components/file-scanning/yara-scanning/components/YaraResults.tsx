@@ -36,6 +36,12 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
   const [filterOption, setFilterOption] = useState<string>("severity");
   const [currentChunk, setCurrentChunk] = useState<number>(1);
   const [totalChunks, setTotalChunks] = useState<number>(2);
+
+  console.log("YARA Data:", yaraData);
+
+  yaraData.matched_rules.map((rule: any) => {
+    console.log("Match Count:", rule.match_count);
+  });
   
   // Function to check if YARA scan has matches
   const hasMatches = yaraData?.matched_rules?.length > 0;
@@ -46,10 +52,16 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
     
     return yaraData.matched_rules.map((rule: any) => ({
       rule: rule.rule_name,
-      description: rule.metadata?.description || "No description",
+      description: rule.metadata?.description,
+      author: rule.metadata?.author || "Unknown",
+      creationDate: rule.metadata?.creation_date || "Unknown",
+      threatName: rule.metadata?.threat_name || rule.rule_name,
+      archContext: rule.metadata?.arch_context || "Unknown",
+      scanContext: rule.metadata?.scan_context || "Unknown",
       severity: getSeverityFromValue(rule.metadata?.severity),
       matches: rule.matches?.map((m: any) => `Offset ${m.position}: ${m.data}`).filter((m: string) => m) || [],
       offset: rule.matches?.[0]?.position || 0,
+      matchCount: rule.match_count || rule.matches?.length || 0,
       metadata: rule.metadata || {}
     }));
   };
@@ -145,7 +157,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
 
   // Calculate total match count for all rules
   const totalMatchCount = yaraData?.matched_rules?.reduce((total: number, rule: any) => 
-    total + (rule.matches?.length || 0), 0) || 0;
+    total + (rule.match_count || 0), 0) || 0;
 
   return (
     <div className="space-y-6 w-full max-w-full">
@@ -172,16 +184,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
                 </div>
               </div>
               
-              {file && !isScanning && (
-                <Button 
-                  variant="outline" 
-                  onClick={onScan}
-                  className="flex items-center gap-2 bg-zinc-900/50 text-white border-zinc-700 hover:bg-zinc-800"
-                >
-                  <RefreshCw size={16} />
-                  {yaraData ? "Rescan File" : "Start Scan"}
-                </Button>
-              )}
+              
             </div>
             
             {yaraData?.matched_rules && yaraData.matched_rules.length > 0 && (
@@ -437,7 +440,7 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
                                             <div className="flex items-center gap-1.5">
                                               <Fingerprint className="h-4 w-4 text-blue-400" />
                                               <span className="text-sm font-medium text-blue-400">
-                                                {rule.matches?.length || 0}
+                                                {rule.match_count || 0}
                                               </span>
                                             </div>
                                             
@@ -475,12 +478,12 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
                                                     <div className="flex items-center gap-1.5 cursor-help">
                                                       <Fingerprint className="h-4 w-4 text-blue-400" />
                                                       <span className="text-sm font-medium text-blue-400">
-                                                        {rule.matches?.length || 0} matches
+                                                        {rule.match_count || 0} matches
                                                       </span>
                                                     </div>
                                                   </TooltipTrigger>
                                                   <TooltipContent className="bg-zinc-800 text-zinc-200 border-zinc-700">
-                                                    {rule.matches?.length || 0} matches found
+                                                    {rule.match_count || 0} matches found
                                                   </TooltipContent>
                                                 </Tooltip>
                                               </TooltipProvider>
@@ -544,9 +547,6 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
                                               <Badge variant="outline" className={`${severityColors.bg}/10 ${severityColors.text} border-${severityColors.border}/20`}>
                                                 Severity: {rule.metadata?.severity}
                                               </Badge>
-                                              <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
-                                                Matches: {rule.matches?.length || 0}
-                                              </Badge>
                                             </div>
                                           </div>
                                           
@@ -558,10 +558,12 @@ export const YaraResults: React.FC<ExtendedYaraScanProps> = ({
                                             </h5>
                                             
                                             <div className="space-y-2">
-                                              {rule.metadata && Object.keys(rule.metadata).map((key) => (
+                                              {rule.metadata && Object.keys(rule.metadata).map((key, idx) => (
                                                 rule.metadata[key] && (
-                                                  <div key={key} className="grid grid-cols-3 gap-2 py-2 border-b border-zinc-800/50">
-                                                    <span className="text-zinc-400 text-xs">{key.replace(/_/g, ' ')}:</span>
+                                                  <div key={`${rule.rule_name}-metadata-${key}-${idx}`} className="grid grid-cols-3 gap-2 py-2 border-b border-zinc-800/50">
+                                                    <span className="text-zinc-500 text-xs">
+                                                      {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}:
+                                                    </span>
                                                     <span className="text-zinc-300 col-span-2 text-xs break-all">
                                                       {rule.metadata[key].toString()}
                                                     </span>
