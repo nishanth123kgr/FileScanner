@@ -10,9 +10,9 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
-  // For custom domain deployment
-  basePath: '',
-  assetPrefix: '',
+  // For custom domain deployment - explicitly set to empty
+  basePath: undefined,
+  assetPrefix: undefined,
   trailingSlash: true,
   
   // Add webpack configuration to handle Node.js modules in browser
