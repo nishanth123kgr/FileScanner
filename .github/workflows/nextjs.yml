@@ -94,6 +94,11 @@ jobs:
           else
             echo "Warning: public/wasm directory not found"
           fi
+          # Ensure CNAME file is preserved for custom domain
+          if [ -f "./public/CNAME" ]; then
+            cp -v ./public/CNAME ./out/
+            echo "CNAME file copied for custom domain"
+          fi
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

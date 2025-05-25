@@ -10,10 +10,10 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
-  // If you're not deploying to a /scan subdirectory, remove these basePath and assetPrefix settings
-  // or set them to empty strings
+  // For custom domain deployment
   basePath: '',
   assetPrefix: '',
+  trailingSlash: true,
   
   // Add webpack configuration to handle Node.js modules in browser
   webpack: (config, { isServer }) => {
